@@ -1,0 +1,171 @@
+PSEUDOCODE
+STUDENT ATTENDANCE MANAGEMENT SYSTEM
+
+CONSTANT N = 10
+
+STRUCTURE Student
+    INTEGER roll
+    STRING name
+    INTEGER present
+    CHARACTER attendance[50]
+END STRUCTURE
+
+DECLARE s as an array of N Student records
+SET total = 10
+SET threshold = 75
+
+FUNCTION percent(i)
+    RETURN (s[i].present * 100) / total
+END FUNCTION
+
+
+MAIN PROGRAM
+
+1. LOAD STUDENT DATA
+
+    OPEN "students.txt" in READ mode
+
+    IF the file cannot be opened THEN
+        DISPLAY "File not found!"
+        STOP program
+    END IF
+
+    FOR i = 0 TO N - 1
+        READ roll number, present days, and the rest of the line as the name
+        STORE these values in s[i]
+    END FOR
+
+    CLOSE the file
+    DISPLAY "Student data loaded successfully!"
+
+
+2. SHOW THE MENU
+
+    REPEAT
+        DISPLAY:
+            1. Mark Attendance
+            2. View Report
+            3. Find Defaulters
+            4. Change Threshold
+            5. Exit
+
+        INPUT choice
+
+        IF choice cannot be read as an integer THEN
+            EXIT the menu loop
+        END IF
+
+
+3. IF choice = 1: MARK ATTENDANCE
+
+    IF total >= 50 THEN
+        DISPLAY "Maximum classes reached!"
+        CONTINUE to the next menu iteration
+    END IF
+
+    FOR each student
+        DISPLAY the student's roll number and name
+    END FOR
+
+    REPEAT
+        ASK whether everyone is PRESENT (P) or ABSENT (A) by default
+        INPUT def
+        CONVERT def to uppercase
+    UNTIL def is P OR def is A
+
+    IF def = P THEN
+        SET other = A
+    ELSE
+        SET other = P
+    END IF
+
+    FOR each student
+        SET the student's attendance for the current class to def
+    END FOR
+
+    ASK for roll numbers of students whose attendance is other
+    TELL the user to enter 0 when finished
+    INPUT r
+
+    WHILE input is valid AND r is not 0
+        SET found = 0
+
+        SEARCH through all students
+            IF a student's roll number equals r THEN
+                SET that student's current attendance to other
+                SET found = 1
+                STOP searching
+            END IF
+        END SEARCH
+
+        IF found = 0 THEN
+            DISPLAY "Invalid roll number!"
+        END IF
+
+        INPUT the next roll number
+    END WHILE
+
+    FOR each student
+        IF the student's current attendance is P THEN
+            INCREASE the student's present count by 1
+        END IF
+    END FOR
+
+    INCREASE total by 1
+
+
+4. ELSE IF choice = 2 OR choice = 3: VIEW ATTENDANCE
+
+    IF total = 0 THEN
+        DISPLAY "No attendance recorded!"
+        CONTINUE to the next menu iteration
+    END IF
+
+    IF choice = 3 THEN
+        DISPLAY that only students below the threshold will be shown
+    END IF
+
+    DISPLAY report headings
+
+    FOR each student
+        IF choice = 2 OR the student's percentage is below threshold THEN
+            DISPLAY roll number, name, present count, and percentage
+        END IF
+    END FOR
+
+
+5. ELSE IF choice = 4: CHANGE THRESHOLD
+
+    DISPLAY the current threshold
+    INPUT the new threshold
+    STORE the new threshold
+
+
+6. ELSE IF choice = 5: CREATE REPORT AND EXIT
+
+    OPEN "report.txt" in WRITE mode
+
+    IF the report file cannot be opened THEN
+        DISPLAY "Could not create report!"
+    ELSE
+        WRITE report heading and separator
+        WRITE total number of classes
+        WRITE the current threshold
+        WRITE report column headings
+
+        FOR each student
+            WRITE roll number, name, present count, and percentage
+        END FOR
+
+        CLOSE the report file
+        DISPLAY "Report created successfully as report.txt"
+    END IF
+
+
+7. OTHERWISE
+
+    DISPLAY "Invalid choice!"
+
+    CONTINUE the menu until choice is 5.
+
+END PROGRAM
