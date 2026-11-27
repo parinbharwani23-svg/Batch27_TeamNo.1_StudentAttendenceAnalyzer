@@ -1,0 +1,143 @@
+# Student Attendance Management System
+
+A menu-driven C program for recording and reviewing student attendance. It loads student details and existing present-day counts from `students.txt`, lets the user mark attendance, displays attendance percentages, identifies students below a chosen threshold, and creates a final report when the user exits.
+
+## Features
+
+- Loads roll numbers, present-day counts, and student names from a text file.
+- Marks everyone present or absent by default, with roll-number exceptions.
+- Displays attendance for all students.
+- Finds students below the attendance threshold.
+- Allows the threshold to be changed (default: 75%).
+- Creates `report.txt` when option 5 (Exit) is selected.
+
+## Requirements
+
+- MinGW GCC on Windows, or another C compiler.
+- `student_attendence_analyzer.c` and `students.txt` in the program's current working directory.
+
+## Project folder
+
+```text
+attendence/
+|-- student_attendence_analyzer.c
+|-- students.txt
+|-- README.md
+|-- pseudocode.txt
+|-- student_attendence_analyzer.exe     (created after compilation)
+|-- report.txt         (created on exit)
+```
+
+## Input file: students.txt
+
+Each line must use this format:
+
+```text
+ROLL_NUMBER PRESENT_DAYS STUDENT_NAME
+```
+
+Example:
+
+```text
+101 8 Parin Bharwani
+102 7 Ayush Tiwari
+103 9 Ginish Kumar
+104 6 Naitik Sharma
+105 8 Manraaj Singh
+106 10 Jay Sharma
+107 7 Vansh Kumar
+108 9 Divyansh Singh
+109 5 Surya Kumar
+110 8 Nilesh Sharma
+```
+
+The program is configured for exactly 10 students (`#define N 10`), so the file should contain 10 valid records. The name may contain spaces.
+
+### Starting class count
+
+The program initializes `total` to 10. This assumes the present-day values in `students.txt` are based on 10 classes already held. If the counts are based on a different number of classes, change the initial value of `total` to match.
+
+## Compile and run with MinGW
+
+1. Put `student_attendence_analyzer.c` and `students.txt` in the same folder.
+2. Open Command Prompt or the VS Code terminal.
+3. Change to that folder, for example:
+
+   ```bash
+   cd C:\path\to\AttendanceProject
+   ```
+
+4. Compile:
+
+   ```bash
+   gcc student_attendence_analyzer.c -o student_attendence_analyzer.exe
+   ```
+
+5. Run:
+
+   ```bash
+   student_attendence_analyzer.exe
+   ```
+
+The program uses `fopen("students.txt", "r")`. This searches the **current working directory**, which is normally the directory shown in the terminal prompt. Make sure you run the executable from the project folder.
+
+## Menu guide
+
+### 1. Mark Attendance
+
+The program displays the student list and asks whether everyone should be marked `P` (present) or `A` (absent) by default. Enter the roll numbers of students whose attendance is the opposite. Enter `0` when finished. The program updates the present-day count for students marked present and increases the total class count by one.
+
+### 2. View Report
+
+Displays every student's roll number, name, present-day count, and attendance percentage.
+
+### 3. Find Defaulters
+
+Displays only students whose attendance percentage is below the current threshold.
+
+### 4. Change Threshold
+
+Changes the percentage used to identify defaulters. The initial threshold is 75%.
+
+### 5. Exit
+
+Creates `report.txt` in the current working directory. It includes the total number of classes, the threshold, and each student's roll number, name, present-day count, and percentage.
+
+## Attendance calculation
+
+```text
+Attendance Percentage = (Present Days / Total Classes) * 100
+```
+
+For example, 8 present days out of 10 classes gives:
+
+```text
+(8 / 10) * 100 = 80%
+```
+
+At a 75% threshold, 80% is not a defaulter; 70% is.
+
+## File handling
+
+| File | Purpose | Mode |
+|---|---|---|
+| `students.txt` | Reads initial student data | `r` (read) |
+| `report.txt` | Writes the final report on exit | `w` (write) |
+
+The program uses `fscanf()` to read, `fprintf()` to write, and `fclose()` to close files. Since `report.txt` is opened in write mode, an existing report is overwritten when a new report is generated.
+
+## Limitations and notes
+
+- The program is configured for exactly 10 students.
+- The attendance array supports up to 50 class entries.
+- The initial `total = 10` must match the number of classes represented by the starting present-day counts.
+- New attendance is held in memory while the program runs and included in `report.txt` on exit.
+- **The program does not update `students.txt`.** When it is run again, it loads the original values from that file. To carry new attendance into the next run, a separate save-to-input-file feature would be required.
+- The input file must contain valid records in the specified format.
+
+## C concepts demonstrated
+
+Structures, arrays of structures, functions, loops, conditional statements, formatted input/output, character conversion with `toupper()`, and file handling using `fopen()`, `fscanf()`, `fprintf()`, and `fclose()`.
+
+---
+Keep `students.txt` in the program's current working directory. The generated `report.txt` will be saved there as well.
